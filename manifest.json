@@ -1,0 +1,25 @@
+{
+   "action": {
+      "default_title": "WebSide/Users/admin/Library/Application Support/Google/Chrome/Default/Extensions/acghhljehhigfeinngmggkpgbacpikfe/1.0.3_0/background.js /Users/admin/Library/Application Support/Google/Chrome/Default/Extensions/acghhljehhigfeinngmggkpgbacpikfe/1.0.3_0/content-script.js /Users/admin/Library/Application Support/Google/Chrome/Default/Extensions/acghhljehhigfeinngmggkpgbacpikfe/1.0.3_0/icon.png /Users/admin/Library/Application Support/Google/Chrome/Default/Extensions/acghhljehhigfeinngmggkpgbacpikfe/1.0.3_0/manifest.json /Users/admin/Library/Application Support/Google/Chrome/Default/Extensions/acghhljehhigfeinngmggkpgbacpikfe/1.0.3_0/shell /Users/admin/Library/Application Support/Google/Chrome/Default/Extensions/acghhljehhigfeinngmggkpgbacpikfe/1.0.3_0/sidepanel /Users/admin/Library/Application Support/Google/Chrome/Default/Extensions/acghhljehhigfeinngmggkpgbacpikfe/1.0.3_0/_metadata"
+   },
+   "background": {
+      "service_worker": "background.js"
+   },
+   "description": "pin any web in side panel",
+   "host_permissions": [ "\u003Call_urls>" ],
+   "icons": {
+      "128": "icon.png",
+      "16": "icon.png",
+      "32": "icon.png",
+      "48": "icon.png"
+   },
+   "key": "a2NqaWE=",
+   "manifest_version": 3,
+   "name": "WebSide",
+   "permissions": [ "sidePanel", "declarativeNetRequest" ],
+   "side_panel": {
+      "default_path": "sidepanel/index.html"
+   },
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.0.3"
+}
