@@ -52,6 +52,13 @@ function buildActiveTabInfo(tab) {
 let tabCounter = 1;
 
 function createTab(url, title) {
+  // 检查是否已存在相同的URL
+  const existingTab = Array.from(document.querySelectorAll('.tab')).find(tab => tab.dataset.url === url);
+  if (existingTab) {
+    // 如果存在相同的URL，直接切换到该标签页
+    switchTab(existingTab.dataset.id);
+    return;
+  }
   tabCounter++;
   const newTab = document.createElement('div');
   newTab.className = 'tab';
@@ -64,6 +71,11 @@ function createTab(url, title) {
   newIframeContainer.dataset.id = tabCounter;
   newIframeContainer.innerHTML = `<iframe frameborder="0" allow="clipboard-write" src="${url}"></iframe>`;
   document.querySelector('.iframes').appendChild(newIframeContainer);
+
+  // 保存标签页信息到localStorage
+  const tabs = JSON.parse(localStorage.getItem('tabs')) || [];
+  tabs.push({ id: tabCounter, url, title });
+  localStorage.setItem('tabs', JSON.stringify(tabs));
 }
 
 function switchTab(tabId) {
@@ -73,6 +85,7 @@ function switchTab(tabId) {
     } else {
       element.classList.remove('active');
     }
+    localStorage.setItem('activeTabId', tabId);
   });
 }
 
@@ -120,7 +133,26 @@ document.addEventListener('click', function (e) {
     const tabId = e.target.parentNode.dataset.id;
     document.querySelector(`.tab[data-id="${tabId}"]`).remove();
     document.querySelector(`.iframe-container[data-id="${tabId}"]`).remove();
+
+    // 从localStorage中删除标签页信息
+    const tabs = JSON.parse(localStorage.getItem('tabs')) || [];
+    const index = tabs.findIndex(tab => tab.id === tabId);
+    if (index !== -1) {
+      tabs.splice(index, 1);
+      localStorage.setItem('tabs', JSON.stringify(tabs));
+    }
   } else if (e.target.classList.contains('tab')) {
     switchTab(e.target.dataset.id);
+  }
+});
+
+// 在页面加载时，恢复localStorage中保存的标签页
+window.addEventListener('load', function () {
+  const tabs = JSON.parse(localStorage.getItem('tabs')) || [];
+  tabs.forEach(tab => createTab(tab.url, tab.title));
+  // 在页面加载时，恢复localStorage中保存的选中标签页
+  const activeTabId = localStorage.getItem('activeTabId');
+  if (activeTabId) {
+    switchTab(activeTabId);
   }
 });
