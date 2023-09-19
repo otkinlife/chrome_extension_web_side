@@ -9,7 +9,7 @@ function sendEventToIframe(eventName, eventArgs) {
   iframe.contentWindow.postMessage({ eventName, eventArgs }, '*');
 }
 
-window.addEventListener('message', async function(event) {
+window.addEventListener('message', async function (event) {
   console.debug('onMessage', event.data.eventName, JSON.stringify(event.data.eventArgs));
   const eventName = event.data.eventName;
 
@@ -73,8 +73,8 @@ function createTab(url, title) {
   document.querySelector('.iframes').appendChild(newIframeContainer);
 
   // 保存标签页信息到localStorage
-  const tabs = JSON.parse(localStorage.getItem('tabs')) || [];
-  tabs.push({ id: tabCounter, url, title });
+  const tabs = JSON.parse(localStorage.getItem('tabs')) || {};
+  tabs[url] = { id: tabCounter, title };
   localStorage.setItem('tabs', JSON.stringify(tabs));
 }
 
@@ -135,10 +135,9 @@ document.addEventListener('click', function (e) {
     document.querySelector(`.iframe-container[data-id="${tabId}"]`).remove();
 
     // 从localStorage中删除标签页信息
-    const tabs = JSON.parse(localStorage.getItem('tabs')) || [];
-    const index = tabs.findIndex(tab => tab.id === tabId);
-    if (index !== -1) {
-      tabs.splice(index, 1);
+    const tabs = JSON.parse(localStorage.getItem('tabs')) || {};
+    if (tabs.hasOwnProperty(tabId)) {
+      delete tabs[tabId];
       localStorage.setItem('tabs', JSON.stringify(tabs));
     }
   } else if (e.target.classList.contains('tab')) {
@@ -148,8 +147,10 @@ document.addEventListener('click', function (e) {
 
 // 在页面加载时，恢复localStorage中保存的标签页
 window.addEventListener('load', function () {
-  const tabs = JSON.parse(localStorage.getItem('tabs')) || [];
-  tabs.forEach(tab => createTab(tab.url, tab.title));
+  const tabs = JSON.parse(localStorage.getItem('tabs')) || {};
+  for (let url in tabs) {
+    createTab(url, tabs[url].title);
+  }
   // 在页面加载时，恢复localStorage中保存的选中标签页
   const activeTabId = localStorage.getItem('activeTabId');
   if (activeTabId) {

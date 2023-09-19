@@ -24,6 +24,7 @@ iframe {
   flex-grow: 1;
   text-align: center;
   display: flex;
+  max-width: 150px;
   flex-direction: row;
   align-items: center;
   background-color: #d0d0d0;
@@ -50,6 +51,7 @@ iframe {
   width: 20px;
   height: 20px;
   cursor: pointer;
+  margin-left: 10px;
 }
 
 .tabs-bar {
