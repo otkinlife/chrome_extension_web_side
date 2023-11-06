@@ -187,7 +187,7 @@ body {
 }
 
 #dialog input {
-  width: 100%;
+  width: 90%;
   /* 输入框的宽度 */
   padding: 5px;
   /* 输入框的内边距 */
@@ -196,9 +196,6 @@ body {
 }
 
 #dialog button {
-  background-color: #007BFF;
-  /* 按钮的背景色 */
-  color: #fff;
   /* 按钮的文字颜色 */
   border: none;
   /* 按钮的边框 */
@@ -210,7 +207,17 @@ body {
   /* 按钮的右边距 */
 }
 
-#dialog button:hover {
-  background-color: #0056b3;
-  /* 鼠标悬停在按钮上时的背景色 */
+#err_prompt {
+  color:red
+}
+
+.enabled {
+  background-color: #007BFF;
+  /* 按钮的背景色 */
+  color: #fff;
+}
+
+.disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }

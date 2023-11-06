@@ -21,5 +21,5 @@
       "default_path": "sidepanel/index.html"
    },
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.0.3"
+   "version": "0.0.1"
 }

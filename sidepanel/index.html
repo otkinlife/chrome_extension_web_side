@@ -11,14 +11,14 @@
   <img class="add-tab" src="../add.png" alt="Add Tab" />
 </div>
 <div id="dialog" style="display:none;">
-  <label for="url">URL:</label>
+  <span id="err_prompt"></span><label for="url">URL:</label>
   <input type="text" id="url" required>
   <br>
   <label for="title">Tab 显示名:</label>
   <input type="text" id="title" required>
   <br>
-  <button id="confirm">确定</button>
-  <button id="cancel">取消</button>
+  <button id="confirm" class="disabled" disabled>确定</button>
+  <button id="cancel" class="enabled">取消</button>
 </div>
 <div class="iframes">
 </div>

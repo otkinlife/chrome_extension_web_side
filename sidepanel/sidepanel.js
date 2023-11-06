@@ -78,6 +78,17 @@ function createTab(url, title) {
   localStorage.setItem('tabs', JSON.stringify(tabs));
 }
 
+// 获取网页的标题
+function fetchTitle(url) {
+  return fetch(url)
+    .then(response => response.text())
+    .then(html => {
+      let parser = new DOMParser();
+      let doc = parser.parseFromString(html, "text/html");
+      return doc.title;
+    });
+}
+
 function switchTab(tabId) {
   document.querySelectorAll('.tab, .iframe-container').forEach(element => {
     if (element.dataset.id === tabId) {
@@ -96,10 +107,14 @@ document.querySelector('.add-tab').addEventListener('click', function () {
 
 // 检查输入框是否为空，如果为空则禁用确认按钮
 function checkInputs() {
-  if (!urlInput.value || !titleInput.value) {
+  if (!urlInput.value) {
     confirmButton.disabled = true;
+    confirmButton.classList.add('disabled');
+    confirmButton.classList.remove('enabled');
   } else {
     confirmButton.disabled = false;
+    confirmButton.classList.remove('disabled');
+    confirmButton.classList.add('enabled');
   }
 }
 
@@ -110,12 +125,25 @@ titleInput.addEventListener('input', checkInputs);
 // 确认按钮的点击事件
 confirmButton.addEventListener('click', function () {
   if (!confirmButton.disabled) {
-    createTab(urlInput.value, titleInput.value);
-    switchTab(tabCounter.toString());
-    // 清空输入框并隐藏对话框
-    urlInput.value = '';
-    titleInput.value = '';
-    document.getElementById('dialog').style.display = 'none';
+    let url = urlInput.value;
+    let t = titleInput.value;
+    if (!isValidURL(url)) {
+      document.getElementById('err_prompt').textContent = 'url invalid';
+      return
+    }
+    if (!t) {
+      fetchTitle(url).then(title => {
+        createTab(url, title);
+        switchTab(tabCounter.toString());
+        // 清空输入框并隐藏对话框
+        urlInput.value = '';
+        titleInput.value = '';
+        document.getElementById('dialog').style.display = 'none';
+      })
+        .catch(error => {
+          console.error("An error occurred:", error);
+        });;
+    } 
   }
 });
 
@@ -124,6 +152,9 @@ document.getElementById('cancel').addEventListener('click', function () {
   // 清空输入框并隐藏对话框
   urlInput.value = '';
   titleInput.value = '';
+  confirmButton.disabled = true;
+  confirmButton.classList.add('disabled');
+  confirmButton.classList.remove('enabled');
   document.getElementById('dialog').style.display = 'none';
 });
 
@@ -157,3 +188,16 @@ window.addEventListener('load', function () {
     switchTab(activeTabId);
   }
 });
+
+function isValidURL(url) {
+  const pattern = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+    "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|" + // domain name
+    "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+    "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+    "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+    "(\\#[-a-z\\d_]*)?$",
+    "i"
+  ); // fragment locator
+  return pattern.test(url);
+}
