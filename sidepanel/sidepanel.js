@@ -63,12 +63,14 @@ function createTab(url, title) {
   const newTab = document.createElement('div');
   newTab.className = 'tab';
   newTab.dataset.id = tabCounter;
+  newTab.dataset.url = url;
   newTab.innerHTML = `<span class="tab-title">${title}</span><img class="close-tab" src="../close.png" alt="Close Tab" />`;
   document.querySelector('.tabs-bar').insertBefore(newTab, document.querySelector('.add-tab'));
 
   const newIframeContainer = document.createElement('div');
   newIframeContainer.className = 'iframe-container';
   newIframeContainer.dataset.id = tabCounter;
+  newIframeContainer.dataset.url = url;
   newIframeContainer.innerHTML = `<iframe frameborder="0" allow="clipboard-write" src="${url}"></iframe>`;
   document.querySelector('.iframes').appendChild(newIframeContainer);
 
@@ -162,13 +164,14 @@ document.getElementById('cancel').addEventListener('click', function () {
 document.addEventListener('click', function (e) {
   if (e.target.className === 'close-tab') {
     const tabId = e.target.parentNode.dataset.id;
+    const url = e.target.parentNode.dataset.url;
     document.querySelector(`.tab[data-id="${tabId}"]`).remove();
     document.querySelector(`.iframe-container[data-id="${tabId}"]`).remove();
 
     // 从localStorage中删除标签页信息
     const tabs = JSON.parse(localStorage.getItem('tabs')) || {};
-    if (tabs.hasOwnProperty(tabId)) {
-      delete tabs[tabId];
+    if (tabs.hasOwnProperty(url)) {
+      delete tabs[url];
       localStorage.setItem('tabs', JSON.stringify(tabs));
     }
   } else if (e.target.classList.contains('tab')) {
