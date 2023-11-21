@@ -174,8 +174,9 @@ document.addEventListener('click', function (e) {
       delete tabs[url];
       localStorage.setItem('tabs', JSON.stringify(tabs));
     }
-  } else if (e.target.classList.contains('tab')) {
-    switchTab(e.target.dataset.id);
+  } else if (e.target.classList.contains('tab') || e.target.classList.contains('tab-title')) {
+    const tabElement = e.target.classList.contains('tab') ? e.target : e.target.parentNode;
+    switchTab(tabElement.dataset.id);
   }
 });
 
